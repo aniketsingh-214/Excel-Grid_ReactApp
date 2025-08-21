@@ -1,0 +1,143 @@
+/**
+ * ExcelGrid.css
+ * * This file contains all the styling for our Excel-like grid component.
+ * We are using plain CSS with variables for easy theme management.
+ * The styling aims for a clean, modern, and familiar spreadsheet look and feel.
+ */
+
+:root {
+  --grid-border-color: #d4d4d4;
+  --header-bg-color: #f8f9fa;
+  --header-text-color: #5f6368;
+  --cell-hover-bg-color: #f1f3f4;
+  --active-cell-indicator-color: #1a73e8;
+  --active-header-bg-color: #e8f0fe;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --cell-padding: 8px;
+  --button-bg-color: #f8f9fa;
+  --button-border-color: #dadce0;
+  --button-hover-bg-color: #f1f3f4;
+}
+
+.grid-container {
+  font-family: var(--font-family);
+  border: 1px solid var(--grid-border-color);
+  overflow: auto; /* Allows scrolling if grid is too large */
+  height: 80vh; /* Example height, adjust as needed */
+  position: relative;
+}
+
+.grid-table {
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures columns have a consistent width */
+}
+
+/* General styling for all cells (th, td) */
+.grid-table th,
+.grid-table td {
+  border: 1px solid var(--grid-border-color);
+  padding: 0; /* We handle padding inside the cell content */
+  min-width: 100px; /* Minimum width for columns */
+  height: 30px; /* Fixed height for rows */
+  text-align: left;
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+  position: relative; /* For positioning the active cell indicator */
+}
+
+/* Header specific styling (A, B, C... and 1, 2, 3...) */
+.grid-table th {
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
+  font-weight: 600;
+  position: sticky;
+  z-index: 2;
+  text-align: center;
+  user-select: none; /* Prevents text selection on headers */
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.grid-table .col-header {
+  top: 0;
+}
+
+.grid-table .row-header {
+  left: 0;
+  z-index: 3; /* Row headers should be on top of column headers when scrolling */
+}
+
+/* Top-left empty corner cell */
+.grid-table .corner-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 4; /* On top of everything */
+  background-color: var(--header-bg-color);
+  border-right: 1px solid var(--grid-border-color);
+  border-bottom: 1px solid var(--grid-border-color);
+}
+
+/* Highlight for active row and column headers */
+.grid-table th.active-header {
+  background-color: var(--active-header-bg-color);
+}
+
+.cell-content {
+  padding: var(--cell-padding);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+}
+
+.data-cell {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.data-cell:hover {
+  background-color: var(--cell-hover-bg-color);
+}
+
+/* The blue border around the active cell */
+.data-cell.active-cell {
+  box-shadow: inset 0 0 0 2px var(--active-cell-indicator-color);
+}
+
+/* Styling for the input field when a cell is being edited */
+.cell-content.editing {
+  padding: var(--cell-padding);
+}
+
+/* Toolbar for bonus features */
+.grid-toolbar {
+  padding: 8px;
+  background-color: #f1f3f4;
+  border-bottom: 1px solid var(--grid-border-color);
+  display: flex;
+  gap: 8px;
+}
+
+.toolbar-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--button-border-color);
+  background-color: var(--button-bg-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.toolbar-button:hover {
+  background-color: var(--button-hover-bg-color);
+  border-color: #c6c6c6;
+}
+
+/* Sort indicator arrows */
+.sort-indicator {
+  margin-left: 5px;
+  font-size: 12px;
+}
