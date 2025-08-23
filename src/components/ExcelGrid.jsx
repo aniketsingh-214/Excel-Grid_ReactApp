@@ -2,44 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import './ExcelGrid.css';
 import { getColumnHeader, createEmptyGrid } from './utils';
 
-/**
- * ExcelGrid Component
- * * This is a feature-rich, Excel-like grid component built with React.
- * It's designed to be generic, allowing data, rows, and columns to be passed in from a parent component.
- *
- * Core Features:
- * - Displays data in a grid with Excel-style headers (A, B, C... for columns, 1, 2, 3... for rows).
- * - Cells are editable.
- * - Full keyboard navigation (Arrow keys, Tab).
- * - Highlights the active cell's row and column headers.
- *
- * Bonus Features:
- * - Add new rows or columns.
- * - Sort columns in ascending or descending order.
- */
 const ExcelGrid = ({ initialData, initialRows, initialCols }) => {
-  // If initialData is provided, use it. Otherwise, create an empty grid.
   const [data, setData] = useState(() => {
     if (initialData) return initialData;
     return createEmptyGrid(initialRows || 10, initialCols || 10);
   });
 
-  // State to track the currently active/focused cell.
   const [activeCell, setActiveCell] = useState({ row: 0, col: 0 });
-  
-  // State to track the cell being edited. This is different from the active cell for better UX.
   const [editingCell, setEditingCell] = useState(null);
-
-  // State for sorting functionality.
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
-  // Refs for each cell input to manage focus programmatically.
   const cellRefs = useRef({});
 
   const numRows = data.length;
   const numCols = data[0]?.length || 0;
 
-  // Effect to focus the active cell's input when it changes.
   useEffect(() => {
     const cellKey = `${activeCell.row}-${activeCell.col}`;
     const cell = cellRefs.current[cellKey];
@@ -47,8 +24,6 @@ const ExcelGrid = ({ initialData, initialRows, initialCols }) => {
       cell.focus();
     }
   }, [activeCell]);
-
-  // --- Data Manipulation Handlers ---
 
   const handleDataChange = (row, col, value) => {
     const newData = data.map((r, rowIndex) =>
@@ -68,8 +43,6 @@ const ExcelGrid = ({ initialData, initialRows, initialCols }) => {
     const newData = data.map(row => [...row, '']);
     setData(newData);
   };
-
-  // --- Keyboard Navigation ---
 
   const handleKeyDown = (e, row, col) => {
     let newRow = row;
@@ -112,30 +85,26 @@ const ExcelGrid = ({ initialData, initialRows, initialCols }) => {
         break;
       case 'Enter':
         if (editingCell) {
-          setEditingCell(null); // Exit edit mode
-          // Move to the cell below, like Excel
+          setEditingCell(null); 
           newRow = Math.min(numRows - 1, row + 1);
         } else {
-          setEditingCell({ row, col }); // Enter edit mode
+          setEditingCell({ row, col }); 
         }
         e.preventDefault();
         break;
       case 'Escape':
-        setEditingCell(null); // Exit edit mode without saving changes (if any were pending)
+        setEditingCell(null); 
         e.preventDefault();
         break;
       default:
-        // For any other key, if not already editing, enter edit mode.
         if (!editingCell && e.key.length === 1) {
            setEditingCell({ row, col });
         }
-        return; // Do not update active cell for other keys
+        return;
     }
     
     setActiveCell({ row: newRow, col: newCol });
   };
-
-  // --- Sorting Logic ---
 
   const sortedData = React.useMemo(() => {
     let sortableItems = [...data];
@@ -169,8 +138,6 @@ const ExcelGrid = ({ initialData, initialRows, initialCols }) => {
     }
     return null;
   };
-
-  // --- Rendering ---
 
   return (
     <div>
